@@ -1,0 +1,1 @@
+const alertas=document.querySelectorAll(".alertas");alertas.forEach((e=>{e.classList.contains("error")?setTimeout((()=>{e.remove()}),1e4):setTimeout((()=>{e.remove()}),3e3)}));
