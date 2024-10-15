@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Classes\Email;
 use Model\Usuario;
 use MVC\Router;
 
@@ -41,15 +42,55 @@ class LoginController{
                     $usuario->hashPassword();
                     //Crear token
                     $usuario->crearToken();
-                    debuguear($usuario);
+                    //Instancia de Email
+                    $email = new Email($usuario->nombre, $usuario->email, $usuario->token);
+                    $email->confirmarCuenta();
+
+                    $resultado = $usuario->guardar();
+                    
+                    if($resultado){
+                        header("Location: /mensaje");
+                    }
                }
 
             }
+            
         }
         
         $router->render('auth/crear-cuenta', [
             'usuario' => $usuario,
             'alertas' => $alertas
+        ]);
+    }
+
+    public static function mensaje(Router $router){
+        $router->render('auth/mensaje');
+    }
+
+    public static function confirmarCuenta(Router $router){
+        $alertas = [];
+
+        $token = s($_GET['token']);
+        
+        if($token){
+            $usuario = Usuario::where('token', $token);
+            if($usuario){
+
+                $usuario->token = null;
+                $usuario->confirmado = '1';
+
+                $usuario->guardar();
+                Usuario::setAlerta('exito', "El token ha sido validado");
+            }else{
+                Usuario::setAlerta('error', "El token es invalido");
+            }
+        }else{
+            Usuario::setAlerta('error', "El token no existe");
+        }
+        $alertas = Usuario::getAlertas();
+
+        $router->render('auth/confirmar-cuenta', [
+            "alertas" => $alertas
         ]);
     }
 }

@@ -11,7 +11,7 @@
         <input type="password" name="password" id="password" placeholder="Ingresa Tu Contraseña">
     </div>
 
-    <input type="submit" value="Iniciar Sesion" class="boton">
+    <input type="submit" value="Iniciar Sesión" class="boton">
 </form>
 
 <div class="acciones">
