@@ -76,6 +76,27 @@ class Usuario extends ActiveRecord{
         return self::$alertas;
     }
 
+    public function validarLogin(): array{
+        $longEma = strlen($this->email);
+        $longPass = strlen($this->password);
+
+        if(!$this->email){
+            self::$alertas['error'][] = "El email es obligatorio";
+        }
+        if($this->email && $longEma > 30){
+            self::$alertas['error'][] = "Su email no debe exceder los 30 caracteres";
+        }
+
+        if(!$this->password){
+            self::$alertas['error'][] = "El password es obligatorio";
+        }
+        if($this->password && $longPass > 30){
+            self::$alertas['error'][] = "Su password no debe exceder los 60 caracteres";
+        }
+
+        return self::$alertas;
+    }
+
     public function verificarEmail(){
         $query = "SELECT * FROM " . self::$tabla . " WHERE email = '" . $this->email . "' LIMIT 1";
         $resultado = self::$db->query($query);
@@ -91,6 +112,24 @@ class Usuario extends ActiveRecord{
 
     public function crearToken(): void{
         $this->token = uniqid();
+    }
+
+    public function verificarPassword($password): bool{
+        $resultado = password_verify($password, $this->password);
+        if(!$resultado){
+            self::$alertas['error'][] = "Las contraseñas no coinciden";
+            return false;
+        }
+        return true;
+    }
+
+    public function verificarCuenta(): bool{
+        if(!$this->confirmado){
+            self::$alertas['error'][] = "Cuenta no confirmada";
+            return false;
+        }
+        return true;
+        
     }
 
 }

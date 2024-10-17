@@ -9,7 +9,52 @@ use MVC\Router;
 class LoginController{
 
     public static function login(Router $router){
-       $router->render('auth/login');
+        $alertas = [];
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+            $auth = new Usuario($_POST);
+            $alertas = $auth->validarLogin();
+            
+            if(empty($alertas)){
+                //Verificar que el usuario exista
+                $usuario = Usuario::where('email', $auth->email);
+
+                if(!is_null($usuario)){
+                    $resultPassword = $usuario->verificarPassword($auth->password);
+
+                    if($resultPassword){
+                        $resultConfirmado = $usuario->verificarCuenta();
+
+                        if($resultConfirmado){
+                            session_start();
+
+                            $_SESSION['id'] = $usuario->id;
+                            $_SESSION['nombre'] = $usuario->nombre . " " . $usuario->apellido;
+                            $_SESSION['email'] = $usuario->email;
+                            $_SESSION['login'] = true;
+                            
+                            if($usuario->admin){
+                                $_SESSION['admin'] = $usuario->admin ?? null;
+                                header("Location: /admin");
+                            }else{
+                                $_SESSION['admin'] = null;
+                                header("Location: /cliente");
+                            }
+                        }
+                    }
+                    
+                }else{
+                    Usuario::setAlerta('error', 'Usuario no encontrado');
+                }
+            }
+        }
+
+        $alertas = Usuario::getAlertas();
+
+        $router->render('auth/login', [
+            "alertas" => $alertas
+        ]);
     }
 
     public static function logout(){
@@ -80,7 +125,7 @@ class LoginController{
                 $usuario->confirmado = '1';
 
                 $usuario->guardar();
-                Usuario::setAlerta('exito', "El token ha sido validado");
+                Usuario::setAlerta('exito', "Tu cuenta ha sido confirmada");
             }else{
                 Usuario::setAlerta('error', "El token es invalido");
             }
