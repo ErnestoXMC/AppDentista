@@ -62,11 +62,83 @@ class LoginController{
     }
 
     public static function olvidar(Router $router){
-        $router->render('auth/olvide-password');
+        $alertas = [];
+        
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $auth = new Usuario($_POST);
+            $alertas = $auth->validarEmail();
+
+            if(empty($alertas)){
+                //Validar la existencia del usuario
+                $usuario = Usuario::where('email', $auth->email);
+                if($usuario){
+                    if($usuario->confirmado === '1'){
+                        $usuario->crearToken();
+                        $usuario->guardar();
+
+                        $email = new Email($usuario->nombre, $usuario->email, $usuario->token);
+                        $email->enviarInstrucciones();
+
+                        Usuario::setAlerta('exito', 'Revisa tu correo');
+
+                    } else{
+                        Usuario::setAlerta('error', 'El usuario no esta confirmado');
+                    }
+                }else{
+                    Usuario::setAlerta('error', 'El usuario no existe');
+                }
+            }
+        }
+        $alertas = Usuario::getAlertas();
+
+        $router->render('auth/olvide-password', [
+            'alertas' => $alertas
+        ]);
     }
 
-    public static function recuperar(){
-        echo "Desde recuperar contraseña";
+    public static function recuperar(Router $router){
+        $alertas = [];
+        $token = s($_GET['token']);
+        $error = false;
+
+        if($token){
+            $usuario = Usuario::where('token', $token);
+            if($usuario){
+
+               if($_SERVER['REQUEST_METHOD'] === 'POST'){
+                    $auth = new Usuario($_POST);
+                    $alertas = $auth->validarPassword();
+
+                    if(empty($alertas)){
+
+                        $usuario->password = null;
+                        $usuario->password = $auth->password;
+                        $usuario->hashPassword();
+
+                        $usuario->token = null;
+
+                        $resultado = $usuario->guardar();
+
+                        if($resultado){
+                            header('Location: /');
+                        }
+                    }
+               }
+            }else{
+                Usuario::setAlerta('error', 'El Token es invalido');
+                $error = true;
+            }
+        }else{
+            Usuario::setAlerta('error', 'El Token No existe');
+            $error = true;
+        }
+        
+        $alertas = Usuario::getAlertas();
+
+        $router->render('auth/recuperar-password', [
+            'alertas' => $alertas,
+            'error' => $error
+        ]);
     }
 
     public static function crearCuenta(Router $router){
