@@ -1,0 +1,37 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+@use "sass:color";
+
+.tabs{
+    margin: 3rem 0;
+    @include m.telefono{
+        display: flex;
+    }
+    button{
+        background-color: v.$verde;
+        border: none;
+        color: v.$blanco;
+        text-transform: uppercase;
+        font-weight: bold;
+        width: 100%;
+        display: block;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: background-color .3s ease-in-out, transform .3s ease-in-out;
+
+        &:hover{
+            background-color: color.scale(v.$verde, $lightness: -30%);
+            transform: scale(1.08);
+            cursor: pointer;
+        }
+        &.actual{
+            transform: scale(1.08);
+            background-color: v.$blanco;
+            color: v.$verde;
+        }
+    }
+}
+
+
+
+

@@ -2,11 +2,13 @@
 
 require_once __DIR__ . '/../includes/app.php';
 
+use Controllers\CitasController;
 use Controllers\LoginController;
 use MVC\Router;
 
 $router = new Router();
 
+//! AUTENTICACION DE USUARIOS - PUBLICA
 //*Iniciar Sesion
 $router->get("/", [LoginController::class, 'login']);
 $router->post("/", [LoginController::class, 'login']);
@@ -28,5 +30,8 @@ $router->get('/mensaje', [LoginController::class, 'mensaje']);
 //*Confirmar
 $router->get('/confirmar-cuenta', [LoginController::class, 'confirmarCuenta']);
 
+//! GESTION DE CITAS - PRIVADA
+//*Citas
+$router->get('/citas', [CitasController::class, 'index']);
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
