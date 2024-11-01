@@ -1,0 +1,44 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.listado-secciones{
+    display: grid;
+    gap: 2rem;
+
+    @include m.tablet{
+        @include m.grid(2, 2rem);
+    }
+
+    .servicio{
+        background-color: v.$blanco;
+        border-radius: .8rem;
+        transition: transform .3s ease-in-out;
+
+        &:hover{
+            cursor: pointer;
+            transform: scale(1.08);
+        }
+
+        p{
+            color: v.$negro;
+            text-align: center;
+        }
+
+        .precio-servicio{
+            color: v.$verde;
+            font-weight: v.$bold;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

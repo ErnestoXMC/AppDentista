@@ -2,6 +2,12 @@ let paso = 1;
 const pasoInicial = 1;
 const pasoFinal = 3
 
+const cita = {
+    nombre: '',
+    fecha: '',
+    hora: '',
+    servicios: []
+}
 
 document.addEventListener('DOMContentLoaded', ()=>{
     eliminarAlerta();
@@ -32,6 +38,7 @@ function iniciarApp(){
     pagSiguiente();
     botonesPaginador();
     tabs();
+    consultarAPI();
 }
 
 function tabs(){
@@ -62,6 +69,7 @@ function mostrarSecciones(){
     const tab = document.querySelector(`[data-paso="${paso}"]`);
     tab.classList.add('actual');
 }
+
 function botonesPaginador(){
     const pagAnte = document.querySelector('#anterior');
     const pagSig = document.querySelector('#siguiente');
@@ -96,3 +104,92 @@ function pagSiguiente(){
         botonesPaginador();
     })
 }
+
+async function consultarAPI(){
+   try {
+        const url = 'http://localhost:3001/api/servicios';
+
+        const response = await fetch(url);
+        const servicios = await response.json();
+
+        mostrarServicios(servicios);
+
+   } catch (error) {
+        console.log(error);
+   }
+
+}
+
+function mostrarServicios(servicios){
+
+    servicios.forEach(servicio =>{
+        const {id, nombre, precio} = servicio;
+
+        const nombreServicio = document.createElement('P');
+        nombreServicio.classList.add('nombre-servicio');
+        nombreServicio.textContent = nombre;
+
+        const precioServicio = document.createElement('P');
+        precioServicio.classList.add('precio-servicio');
+        precioServicio.textContent = `$${precio}`;
+
+        const servicioDiv = document.createElement('DIV');
+        servicioDiv.classList.add('servicio');
+        servicioDiv.dataset.idServicio = id;
+        servicioDiv.onclick = function(){
+            seleccionarServicio(servicio);//* Hacemos un callback
+        }
+
+        servicioDiv.appendChild(nombreServicio);
+        servicioDiv.appendChild(precioServicio);
+
+        const contenedorServicios = document.querySelector('.listado-secciones');
+        contenedorServicios.appendChild(servicioDiv);
+
+    })
+}
+
+function seleccionarServicio(servicio){
+    const {servicios} = cita;
+
+    const existe = servicios.some( service => service.id === servicio.id );
+
+    if(!existe){
+        cita.servicios = [...servicios, servicio];
+    }
+
+    console.log(existe);
+    console.log(cita);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
