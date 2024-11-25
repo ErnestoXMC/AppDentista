@@ -1,6 +1,12 @@
 <h1 class="nombre-pagina">Crear Nueva Cita</h1>
 <p class="descripcion-pagina">Elige tus servicios e ingresa tus datos</p>
 
+<div class="barra">
+    <p>Bienvenido <span><?php echo $nombre;?></span></p>
+    <a href="/logout" class="boton">Cerrar Sesión</a>
+</div>
+
+
 <div id="app">
     <!--Navegacion-->
     <nav class="tabs"> 
@@ -35,6 +41,7 @@
                 <label for="hora">Hora</label>
                 <input type="time" name="hora" id="hora">
             </div>
+            <input type="hidden" name="id" id="id" value="<?php echo $id;?>">
         </form>
     </div>
 

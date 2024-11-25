@@ -8,6 +8,10 @@
     }
     .contenedor-servicio{
         margin: 3rem 0;
+        border-bottom: 1px solid #495057;
+        @include m.tablet{
+            width: 40%;
+        }
     }
     .total-pagar{
         color: v.$blanco;

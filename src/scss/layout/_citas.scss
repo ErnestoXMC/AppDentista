@@ -10,6 +10,27 @@
 .mostrar{
     display: block;
 }
+.barra{
+    margin: 0;
+    p{
+        text-align: center;
+        @include m.tablet{
+            text-align: left;
+        }
+    }
+    span{
+        color: #b7e4c7;
+        font-weight: bold;
+    }
+    @include m.tablet{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .boton{
+        @include m.boton(v.$rojo, v.$blanco);
+    }
+}
 
 
 

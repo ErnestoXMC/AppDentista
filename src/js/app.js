@@ -3,6 +3,7 @@ const pasoInicial = 1;
 const pasoFinal = 3
 
 const cita = {
+    id: '',
     nombre: '',
     fecha: '',
     hora: '',
@@ -44,6 +45,7 @@ function iniciarApp(){
     ingresarNombre();
     ingresarFecha();
     ingresarHora();
+    ingresarId();
 }
 
 function tabs(){
@@ -169,7 +171,6 @@ function seleccionarServicio(servicio){
         cita.servicios = [...servicios, servicio];
         divServicio.classList.add('seleccionado');
     }
-    console.log(cita);
 }
 
 function ingresarNombre(){
@@ -191,7 +192,6 @@ function ingresarFecha(){
             cita.fecha = e.target.value;
             removerAlerta();
         }
-        console.log(cita);
     })
 
 }
@@ -212,6 +212,10 @@ function ingresarHora(){
         }
         console.log(cita);
     })
+}
+
+function ingresarId(){
+    cita.id = document.querySelector('#id').value;
 }
 
 function mostrarAlerta(mensaje, tipo, elemento){
@@ -346,8 +350,61 @@ function mostrarResumen(){
 }
 
 
-function reservarCita(){
-    console.log('reservando cita');
+async function reservarCita(){
+    const {id, nombre, fecha, hora, servicios} = cita;
+    const idServicios = servicios.map(servicio => servicio.id);
+
+    const datos = new FormData();
+    datos.append('usuarioId', id);
+    datos.append('nombre', nombre);
+    datos.append('fecha', fecha);
+    datos.append('hora', hora);
+    datos.append('servicios', idServicios);
+
+    console.log([...datos]);
+    
+    try {
+        const url = 'http://localhost:3001/api/citas';
+        const response = await fetch(url, {
+            method: 'POST',
+            body: datos
+        })
+
+        result = await response.json();
+        if(result.cita && result.citaServicio){
+            Swal.fire({
+                icon: "success",
+                title: "Cita Creada",
+                text: "¡Tu cita fue creada correctamente!",
+                customClass: {
+                    popup: 'swal-custom-popup', // contenedor
+                    icon: 'swal-custom-icon',  // ícono
+                    title: 'swal-custom-title', // título
+                    confirmButton: 'swal-custom-button' // botón
+                }
+            }).then(() => {
+                window.location.reload();
+            });
+        }
+        console.log(result);
+    } catch (error) {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Hubo un error al crear la cita",
+            customClass: {
+                popup: 'swal-custom-popup', // contenedor
+                icon: 'swal-custom-icon',  // ícono
+                title: 'swal-custom-title', // título
+                confirmButton: 'swal-custom-button' // botón
+            }
+          }).then(()=>{
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        });
+        console.log(error);
+    }
 }
 
 
