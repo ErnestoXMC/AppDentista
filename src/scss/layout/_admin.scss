@@ -1,0 +1,44 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.citas-admin{
+    h2{
+        margin: 5rem;
+    }
+    ul{
+        list-style: none;
+        padding: 0;
+    }
+    li{
+        border-top: 1px solid white;
+        h3{
+            margin: 4rem;
+        }
+        p{
+            color: v.$verde;
+            font-weight: v.$bold;
+        }
+        span{
+            color: white;
+            font-weight: normal;
+        }
+       
+    }
+}
+
+.servicios-admin{
+    border-bottom: 1px solid #495057;
+    width: auto;
+    @include m.desktop{
+        width: 40%;
+    }
+    p{
+        color: v.$verde;
+        font-weight: v.$bold;
+    }
+    span{
+        color: white;
+        font-weight: normal;
+    }
+}
+
