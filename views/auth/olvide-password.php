@@ -16,6 +16,7 @@
     <a href="/crear-cuenta">¿Aún no tienes una cuenta? Crea una</a>
 </div>
 
+<?php $script = "<script src='build/js/app.js'></script>"; ?>
 
 
 

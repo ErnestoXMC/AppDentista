@@ -24,6 +24,7 @@
     <a href="/olvidar">¿Olvidaste tu contraseña?</a>
 </div>
 
+<?php $script = "<script src='build/js/app.js'></script>"; ?>
 
 
 
