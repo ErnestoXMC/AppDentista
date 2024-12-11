@@ -51,6 +51,17 @@ class APIController{
             }       
         }
     }
+
+    public static function historial(){
+        if($_SERVER["REQUEST_METHOD"] === "POST"){
+            $id = $_POST['usuarioId'];
+            $cita = Cita::findXuser($id);
+            $response = [
+                "citas" => $cita
+            ];
+            echo json_encode($response);
+        }
+    }
     
 }
 ?>

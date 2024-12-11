@@ -41,6 +41,7 @@ $router->get('/admin', [AdminController::class, 'index']);
 //! API - SERVICIOS
 $router->get('/api/servicios', [APIController::class, 'index']);
 $router->post('/api/citas', [APIController::class, 'guardar']);
+$router->post('/api/historial', [APIController::class, 'historial']);
 $router->post('/api/eliminar', [APIController::class, 'eliminar']);
 
 

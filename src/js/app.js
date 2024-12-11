@@ -1,6 +1,6 @@
 let paso = 1;
 const pasoInicial = 1;
-const pasoFinal = 3
+const pasoFinal = 4
 
 const cita = {
     id: '',
@@ -46,6 +46,11 @@ function iniciarApp(){
     ingresarFecha();
     ingresarHora();
     ingresarId();
+
+    // historialCitaAPI();
+    historialCita();
+
+
 }
 
 function tabs(){
@@ -84,9 +89,12 @@ function botonesPaginador(){
     if(paso === 1){
         pagSig.classList.remove('ocultar');
         pagAnte.classList.add('ocultar');
-    }else if(paso === 3){
+    }else if(paso === 4){
         pagAnte.classList.remove('ocultar');
         pagSig.classList.add('ocultar');
+    }else if(paso === 3){
+        pagAnte.classList.remove('ocultar');
+        pagSig.classList.remove('ocultar');
         mostrarResumen();
     }else{
         pagAnte.classList.remove('ocultar');
@@ -407,8 +415,122 @@ async function reservarCita(){
     }
 }
 
+function historialCita(){
+    const historial = document.querySelector('.tabs button[data-paso="4"]');
+    historial.addEventListener('click', ()=>{
+        historialCitaAPI();
+    })
+}
 
+async function historialCitaAPI(){
+    const {id} = cita;
+    const dato = new FormData();
+    dato.append("usuarioId", id);
 
+    console.log([...dato]);
+
+    try {
+        const url = "http://localhost:3001/api/historial";
+        const response = await fetch(url, {
+            method: 'post',
+            body: dato
+        })
+
+        const result = await response.json();
+        mostrarHistorial(result.citas);
+        
+    } catch (error) {
+        console.log("Error al traer el historial de citas: " + error);
+    }
+}
+
+function mostrarHistorial(citas){
+    const divHistorial = document.querySelector("#paso-4");
+
+    while(divHistorial.firstChild){
+        divHistorial.removeChild(divHistorial.firstChild);
+    }
+
+    const tituloHistorial = document.createElement("H2");
+    tituloHistorial.textContent = "Historial de Citas";
+
+    const descripHistorial = document.createElement('P');
+    descripHistorial.classList.add("text-center");
+    descripHistorial.textContent = "Todas las citas realizadas se encuentran en esta pestaña";
+    
+    divHistorial.appendChild(tituloHistorial);
+    divHistorial.appendChild(descripHistorial);
+
+    if(citas.length === 0){
+        const mensaje = document.createElement("P");
+        mensaje.classList.add('text-center');
+        mensaje.classList.add('fs-2');
+        mensaje.textContent = "No se encontraron citas";
+
+        divHistorial.appendChild(mensaje);
+    }
+
+    const fechaActual = new Date();
+
+    citas.forEach(cita =>{
+        const {id, fecha, hora} = cita;
+
+        const dateCita = new Date(fecha);
+        let estado = "";
+        let num = 0;
+
+        if (dateCita < fechaActual) {
+            estado = "Finalizado";
+            num = 0;
+            
+        } else if (dateCita.toDateString() === fechaActual.toDateString()) {
+            estado = "En curso";
+            num = 1;
+        } else {
+            estado = "Pendiente";
+            num = 2;
+        }
+
+        const divCita = document.createElement('DIV');
+        divCita.classList.add("container-historial");
+
+        const idCita = document.createElement('P');
+        idCita.innerHTML = `
+            N° Cita: <span>${id}</span>
+        `;
+
+        const fechaCita = document.createElement('P');
+        fechaCita.innerHTML = `
+        Fecha: <span>${fecha}</span>
+        `;
+
+        const horaCita = document.createElement('P');
+        horaCita.innerHTML = `
+        Hora: <span>${hora}</span>
+        `;
+
+        const estadoCita = document.createElement('P');
+        estadoCita.classList.add('estado');
+        if(num === 0){
+            estadoCita.classList.add('red');
+        }else if(num === 1){
+            estadoCita.classList.add('blue')
+        }else{
+            estadoCita.classList.add('green');
+        }
+        estadoCita.innerHTML = `
+        Estado: <span>${estado}</span>
+        `;
+       
+        divCita.appendChild(idCita);
+        divCita.appendChild(fechaCita);
+        divCita.appendChild(horaCita);
+        divCita.appendChild(estadoCita);
+
+        
+        divHistorial.appendChild(divCita);
+    })
+}
 
 
 

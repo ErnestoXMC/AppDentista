@@ -35,6 +35,24 @@
         @include m.boton(v.$rojo, v.$blanco);
     }
 
+.container-historial{
+    border-bottom: 1px solid gray;
+}
 
-
-
+.estado{
+    &.red{
+        span{
+            color: v.$rojo;
+        }
+    }
+    &.blue{
+        span{
+            color: v.$azul;
+        }
+    }
+    &.green{
+        span{
+            color: #ee964b;
+        }
+    }
+}

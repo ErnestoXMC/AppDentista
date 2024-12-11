@@ -116,6 +116,12 @@ class ActiveRecord {
         return array_shift( $resultado ) ;
     }
 
+    public static function findXuser($id) {
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE usuarioId = {$id} ORDER BY fecha DESC";
+        $resultado = self::consultarSQL($query);
+        return $resultado ;
+    }
+
     // Busca un registro por su id
     public static function where($campo, $valor) {
         $query = "SELECT * FROM " . static::$tabla  ." WHERE {$campo} = '{$valor}'";

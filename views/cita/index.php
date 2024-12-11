@@ -48,8 +48,7 @@
     </div>
 
     <div id="paso-4" class="seccion contenido-resumen">
-        <h2>Historial de Citas</h2>
-        <p class="text-center">Todas las citas realizadas se encuentran en esta pestaña</p>
+       <input type="hidden" name="id" value="<?php echo $id; ?>">
     </div>
      <!--Secciones-fin-->
 
