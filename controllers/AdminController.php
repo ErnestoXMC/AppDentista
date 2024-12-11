@@ -9,6 +9,7 @@ class AdminController {
 
     public static function index(Router $router) {
         session_start();
+        isAdmin();
 
         $fechaUrl = $_GET['fecha'] ?? date("Y-m-d");
         $fecha = explode("-", $fechaUrl);

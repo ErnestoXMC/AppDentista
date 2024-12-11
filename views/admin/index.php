@@ -43,6 +43,10 @@
 
                                 if($actual !== $proximo){?>
                                     <p class="servicio-total">Total: <span>$<?php echo $total; ?></span></p>
+                                    <form id="form" action="/api/eliminar" method="POST">
+                                        <input type="hidden" name="id" value="<?php echo $cita->id; ?>">
+                                        <input type="submit" value="Eliminar Cita" class="boton-eliminar">
+                                    </form>
                                 <?php } ?>
                 </li>
         <?php } ?>
@@ -50,6 +54,7 @@
 </div>
 
 <?php echo "<script src='build/js/buscador.js'></script>"; ?>
+<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
 
 
 

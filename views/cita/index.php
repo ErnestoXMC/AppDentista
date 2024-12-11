@@ -9,6 +9,7 @@
         <button type="button" data-paso="1">Servicios</button>
         <button type="button" data-paso="2">Información Cita</button>
         <button type="button" data-paso="3">Resumen</button>
+        <button type="button" data-paso="4">Historial de Citas</button>
     </nav>
 
     <!--Secciones-inicio-->
@@ -44,6 +45,11 @@
     <div id="paso-3" class="seccion contenido-resumen">
         <h2>Resumen</h2>
         <p class="text-center">Verifica que la información sea correcta</p>
+    </div>
+
+    <div id="paso-4" class="seccion contenido-resumen">
+        <h2>Historial de Citas</h2>
+        <p class="text-center">Todas las citas realizadas se encuentran en esta pestaña</p>
     </div>
      <!--Secciones-fin-->
 
